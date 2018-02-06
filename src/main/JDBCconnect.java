@@ -3,6 +3,9 @@ package main;
 import java.sql.*;
 import java.util.ArrayList;
 
+/*
+* Class for methods that connect to DB
+*/
 public class JDBCconnect {
 	
 	// JDBC driver name and database URL
@@ -31,6 +34,7 @@ public class JDBCconnect {
 	 * @return - list of breweries
 	 */
     public ArrayList<BreweriesFull> getFinalBreweries(double latitude, double longitude, int distance) {
+    	// approximate max distance from starting point
     	final double limit = distance/2 + distance*0.05;
     	
     	try{
@@ -46,8 +50,6 @@ public class JDBCconnect {
     		getBreweries();
     		sortBreweries(latitude, longitude, limit);
     		getBeerTypes();
-    		
-    		//System.out.println("Breweries approximately possible to reach: " + breweriesFull.size() + " out of total: " + breweries.size());
     		
     		// Clean-up environment
     		stmt.close();
@@ -117,7 +119,7 @@ public class JDBCconnect {
     				double latitude2 = rs.getDouble("latitude");
     				double longitude2 = rs.getDouble("longitude");
     				
-    				if (calc.HaversineDistance(latitude, latitude2, longitude, longitude2) < limit) {
+    				if (calc.haversineDistance(latitude, latitude2, longitude, longitude2) < limit) {
     					BreweriesFull bf = new BreweriesFull(breweries.get(i).getId(), breweries.get(i).getName(), latitude2, longitude2);
     					breweriesFull.add(bf);
     				}

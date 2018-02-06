@@ -1,5 +1,8 @@
 package main;
 
+/*
+* Class for calculation methods used in multiple classes
+*/
 public class Calculations {
 	
 	/* Finds distance between two points in kilometers
@@ -9,7 +12,7 @@ public class Calculations {
 	 * @param lon2 - longitude of second point
 	 * @return - distance in kilometers
 	 */
-	public double HaversineDistance(double lat1, double lat2, double lon1, double lon2) {
+	public double haversineDistance(double lat1, double lat2, double lon1, double lon2) {
 		final int R = 6371; // Radius of the earth
 	 
 		double latDistance = toRad(lat2-lat1);
@@ -18,10 +21,8 @@ public class Calculations {
 				Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
 				Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-		double distance = R * c;
-		
-		//System.out.println("The distance between two lat and long is:" + distance + " km");
-		return distance;
+
+		return R * c;
 	}
 	 
 	private Double toRad(Double value) {

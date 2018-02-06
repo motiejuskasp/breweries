@@ -1,5 +1,8 @@
 package main;
 
+/*
+* Class for more detailed breweries information
+*/
 public class BreweriesFull {
 
 	private int id = 0;
@@ -10,14 +13,12 @@ public class BreweriesFull {
 	
 	
 	public BreweriesFull(int id, String name) {
-		super();
 		this.id = id;
 		this.name = name;
 	}
 
 
 	public BreweriesFull(int id, String name, double latitude, double longitude) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.latitude = latitude;
@@ -26,7 +27,6 @@ public class BreweriesFull {
 
 
 	public BreweriesFull(int id, String name, int beerTypes, double latitude, double longitude) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.beerTypes = beerTypes;

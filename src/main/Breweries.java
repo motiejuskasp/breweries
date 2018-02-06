@@ -1,5 +1,8 @@
 package main;
 
+/*
+* Class for basic breweries information
+*/
 public class Breweries {
 
 	private int id = 0;
@@ -7,7 +10,6 @@ public class Breweries {
 	
 	
 	public Breweries(int id, String name) {
-		super();
 		this.id = id;
 		this.name = name;
 	}
