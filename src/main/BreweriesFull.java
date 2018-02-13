@@ -3,7 +3,7 @@ package main;
 /*
 * Class for more detailed breweries information
 */
-public class BreweriesFull {
+public class BreweriesFull implements Comparable<BreweriesFull> {
 
 	private int id = 0;
 	private String name = "";
@@ -33,7 +33,14 @@ public class BreweriesFull {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
-
+	
+	
+	@Override
+	public int compareTo(BreweriesFull o) {
+		int compare = o.getBeerTypes();
+		return compare - this.beerTypes;
+	}
+	
 
 	public int getId() {
 		return id;

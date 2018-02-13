@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 
 /*
@@ -30,6 +31,8 @@ public class Program {
 		JDBCconnect data = new JDBCconnect();
 		ArrayList<BreweriesFull> breweriesTemp = data.getFinalBreweries(latitude, longitude, FUEL_LIMIT);
 		
+		Collections.sort(breweriesTemp);
+		
 		for (int i = 0; i < breweriesTemp.size(); i++) {
 			breweries.add(breweriesTemp.get(i));
 		}
@@ -54,44 +57,52 @@ public class Program {
 	}
 	
 	
-	// Find best route
 	public void findBreweries() {
-		boolean	visited[] = new boolean[breweries.size()];
-		Stack<Integer> route = new Stack<>();
-		int types = 0;
-		double km = FUEL_LIMIT;
+		Stack<Integer> best = new Stack<>();
+		Stack<Integer> current = new Stack<>();
+		int types = 0, t = 0, km;
 		
-		//find(0, 0, types, km, route, visited);
+		for (int i = 1; i < breweries.size()-1; i++) {
+			t = 0;
+			km = FUEL_LIMIT;
+			current.clear();
+			current.push(0);
+			
+			km -= distanceMatrix[0][i];
+			if (km - distanceMatrix[0][i] > 0) {
+				t = find(breweries, i, km, current);
+			}
+			//System.out.println(t);
+			current.push(0);
+			
+			if (t > types) {
+				//System.out.println(types + " " + t);
+				best.clear();
+				best = current;
+				types = t;
+			}
+			
+			/*for (int j = 0; j < best.size(); j++)
+				System.out.print(best.get(j) + " ");
+			System.out.println("");*/
+		}
 		
-		// for result print test only!
-		route.push(0);
-		route.push(1);
-		route.push(2);
-		route.push(0);
-		// ---
-		printResult(route);
+		printResult(best);
 	}
 	
 	
-	// Route search method
-	// not working! currently throws StackOverflowError
-	private int find(int curr, int prev, int types, double km, Stack<Integer> route, boolean visited[]) {
-		if (km <= 0 && curr != 0) return types;
-		
-		if (curr != 0) visited[curr] = true;
-		types += breweries.get(curr).getBeerTypes();
-		km -= distanceMatrix[curr][prev];
-		
-		for (int i = 0; i < breweries.size(); i++)
-			if (visited[i] == false) {
-				int t = find(i, curr, types, km, route, visited);
-				if (t > types) {
-					types = t;
-					route.push(i);
-				}
+	private int find(ArrayList<BreweriesFull> list, int n, int km, Stack<Integer> current) {
+		int t = breweries.get(n).getBeerTypes();
+		current.push(n);
+		for (int i = n+1; i < breweries.size()-1; i++) {
+			if (km < 0) break;
+			//current.push(i);
+			km -= distanceMatrix[n][i];
+			if (km - distanceMatrix[0][i] > 0) {
+				t += find(breweries, i, km, current);
 			}
-		
-		return types;		
+		}
+		return t;
 	}
 	
 	
@@ -101,10 +112,10 @@ public class Program {
 	public void printResult(Stack<Integer> route) {
 		int distance = 0, types = 0;
 		
-		if (!route.isEmpty() && route.size() > 3) {
+		if (!route.isEmpty() && route.size() > 2) {
 			System.out.println("Found " + (route.size()-2) + " beer breweries");
 			for (int i = 0; i < route.size(); i++)
-				System.out.println(breweries.get(route.get(i)).getName());
+				System.out.println("> " + breweries.get(route.get(i)).getName());// + " " + route.get(i));
 			
 			for (int i = 1; i < route.size(); i++)
 				distance += distanceMatrix[i-1][i];
